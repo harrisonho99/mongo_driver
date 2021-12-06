@@ -1,0 +1,36 @@
+model User {
+  id                     String         @id
+  email                  String         @unique
+  name                   String
+  phone                  String?
+  image                  String
+  mostRecentConversation Conversation[]
+}
+
+model Conversation {
+  id         String    @id
+  users      User[user1, user2] 
+  modifiedAt DateTime
+}
+
+
+model Message {
+  id             String       @id
+  sender         User         @relation(fields: [authorId], references: [id])
+  authorId       String
+  Conversation   Conversation @relation(fields: [ConversationId], references: [id])
+  ConversationId String       @index
+  CreateAt       DateTime
+  isDeleted      Boolean
+  content        String
+}
+
+
+//use change stream for Notify
+model Notify {
+  id             String       @id
+  user           User         @relation(fields: [userId], references: [id])
+  userId         String
+  CreateAt       DateTime
+  isDeleted      Boolean
+}
